@@ -1,0 +1,46 @@
+import pytest
+
+from praktikum.burger import Burger
+
+
+class TestBurgers:
+
+    def test_set_buns(self, mock_bun):
+        burger = Burger()
+        burger.set_buns(mock_bun)
+        assert burger.bun == mock_bun
+
+    @pytest.mark.parametrize('ingredient', ['Картошка', 'Помидор', 'Огурец'])
+    def test_add_ingredient(self, ingredient):
+        burger = Burger()
+        burger.add_ingredient(ingredient)
+        assert burger.ingredients == [ingredient]
+
+    def test_remove_ingredient(self, mock_ingredient):
+        burger = Burger()
+        burger.add_ingredient(mock_ingredient)
+        burger.remove_ingredient(0)
+        assert burger.ingredients == []
+
+    def test_move_ingredient(self, mock_ingredient, mock_ingredient_next):
+        burger = Burger()
+        burger.add_ingredient(mock_ingredient)
+        burger.add_ingredient(mock_ingredient_next)
+        burger.move_ingredient(0, 1)
+        assert burger.ingredients == [mock_ingredient_next, mock_ingredient]
+        print(burger.ingredients)
+
+    def test_price(self, mock_bun, mock_ingredient):
+        burger = Burger()
+        burger.add_ingredient(mock_ingredient)
+        burger.set_buns(mock_bun)
+        assert burger.get_price() == 65.00
+
+    def test_get_receipt(self, mock_bun, mock_ingredient):
+        burger = Burger()
+        burger.set_buns(mock_bun)
+        burger.add_ingredient(mock_ingredient)
+        assert burger.get_receipt() == ('(==== Космос ====)\n'
+                                        '= начинка Картошка =\n'
+                                        '(==== Космос ====)\n\n'
+                                        'Price: 65.0')
